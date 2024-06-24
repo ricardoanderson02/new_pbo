@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "996569483160",
+    "project_id": "pemrograman-bo",
+    "storage_bucket": "pemrograman-bo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996569483160:android:6c26cc4662dd20ab4ecded",
+        "android_client_info": {
+          "package_name": "com.company.pbo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmHzoKUrfoAjjxRC9Q1mtxVH2EGwwgL-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996569483160:android:9e9180e9e17598a34ecded",
+        "android_client_info": {
+          "package_name": "com.example.pbo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmHzoKUrfoAjjxRC9Q1mtxVH2EGwwgL-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
