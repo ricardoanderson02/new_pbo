@@ -1,11 +1,12 @@
 package com.example.pbo;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -13,146 +14,125 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class EditTaskActivity extends AppCompatActivity {
 
-    private static final String TAG = "EditTaskActivity";
-
-    private EditText editTextTaskTitle, editTextTaskCategory;
-    private Button buttonTaskStartDate, buttonTaskEndDate, buttonUpdateTask;
-    private Spinner spinnerTaskStatus;
-
-    private FirebaseAuth mAuth;
+    private EditText editTextTitle, editTextCategory;
+    private Button buttonStartDate, buttonEndDate, buttonSave;
+    private Spinner spinnerStatus;
     private FirebaseFirestore db;
-
-    private String startDate, endDate;
     private Task task;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_edit_task);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        editTextTitle = findViewById(R.id.editTextTitle);
+        editTextCategory = findViewById(R.id.editTextCategory);
+        buttonStartDate = findViewById(R.id.buttonStartDate);
+        buttonEndDate = findViewById(R.id.buttonEndDate);
+        spinnerStatus = findViewById(R.id.spinnerStatus);
+        buttonSave = findViewById(R.id.buttonSave);
 
-        editTextTaskTitle = findViewById(R.id.editTextTaskTitle);
-        editTextTaskCategory = findViewById(R.id.editTextTaskCategory);
-        buttonTaskStartDate = findViewById(R.id.buttonTaskStartDate);
-        buttonTaskEndDate = findViewById(R.id.buttonTaskEndDate);
-        spinnerTaskStatus = findViewById(R.id.spinnerTaskStatus);
-        buttonUpdateTask = findViewById(R.id.buttonUpdateTask);
-
+        // Setting up the adapter for the spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.task_status_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTaskStatus.setAdapter(adapter);
+        spinnerStatus.setAdapter(adapter);
 
-        // Get task data from Intent
-        task = (Task) getIntent().getSerializableExtra("task");
-        if (task != null) {
-            Log.d(TAG, "Task data received: " + task.getTitle());
-            editTextTaskTitle.setText(task.getTitle());
-            editTextTaskCategory.setText(task.getCategory());
-            buttonTaskStartDate.setText(task.getStartDate());
-            buttonTaskEndDate.setText(task.getEndDate());
-            startDate = task.getStartDate();
-            endDate = task.getEndDate();
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-            int statusPosition = adapter.getPosition(task.getStatus());
-            spinnerTaskStatus.setSelection(statusPosition);
-        } else {
-            handleNullTask();
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("task")) {
+            task = (Task) intent.getSerializableExtra("task");
+            if (task != null) {
+                editTextTitle.setText(task.getTitle());
+                editTextCategory.setText(task.getCategory());
+                buttonStartDate.setText(task.getStartDate());
+                buttonEndDate.setText(task.getEndDate());
+                // Set spinner status
+                int spinnerPosition = adapter.getPosition(task.getStatus());
+                spinnerStatus.setSelection(spinnerPosition);
+            }
         }
 
-        buttonTaskStartDate.setOnClickListener(new View.OnClickListener() {
+        buttonStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePickerDialog((date) -> {
-                    startDate = date;
-                    buttonTaskStartDate.setText(date);
-                });
+                showDatePickerDialog((Button) v);
             }
         });
 
-        buttonTaskEndDate.setOnClickListener(new View.OnClickListener() {
+        buttonEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePickerDialog((date) -> {
-                    endDate = date;
-                    buttonTaskEndDate.setText(date);
-                });
+                showDatePickerDialog((Button) v);
             }
         });
 
-        buttonUpdateTask.setOnClickListener(new View.OnClickListener() {
+        buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = editTextTaskTitle.getText().toString();
-                String category = editTextTaskCategory.getText().toString();
-                String status = spinnerTaskStatus.getSelectedItem().toString();
-
-                if (!title.isEmpty() && !category.isEmpty() && startDate != null && endDate != null) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    if (user != null) {
-                        String userId = user.getUid();
-                        Map<String, Object> taskMap = new HashMap<>();
-                        taskMap.put("title", title);
-                        taskMap.put("category", category);
-                        taskMap.put("startDate", startDate);
-                        taskMap.put("endDate", endDate);
-                        taskMap.put("status", status);
-                        taskMap.put("userId", userId);
-
-                        db.collection("tasks").document(task.getId()).update(taskMap)
-                                .addOnSuccessListener(documentReference -> {
-                                    Toast.makeText(EditTaskActivity.this, "Task Updated", Toast.LENGTH_SHORT).show();
-                                    finish(); // Kembali ke MainActivity
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(EditTaskActivity.this, "Failed to update task", Toast.LENGTH_SHORT).show();
-                                    Log.e(TAG, "Failed to update task: ", e);
-                                });
-                    } else {
-                        Toast.makeText(EditTaskActivity.this, "User not authenticated", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(EditTaskActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                }
+                saveTask();
             }
         });
     }
 
-    private void handleNullTask() {
-        Toast.makeText(this, "Data tidak ditemukan", Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "Task data is null");
-    }
-
-    private void handleException(Exception e) {
-        Toast.makeText(this, "Error retrieving task data", Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "Exception retrieving task data: ", e);
-    }
-
-    private void showDatePickerDialog(DatePickerCallback callback) {
-        Calendar calendar = Calendar.getInstance();
+    private void showDatePickerDialog(final Button button) {
+        final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
-            String date = year1 + "-" + (month1 + 1) + "-" + dayOfMonth;
-            callback.onDateSet(date);
-        }, year, month, day).show();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        button.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    }
+                },
+                year, month, day);
+        datePickerDialog.show();
     }
 
-    interface DatePickerCallback {
-        void onDateSet(String date);
-    }
+    private void saveTask() {
+        String title = editTextTitle.getText().toString();
+        String category = editTextCategory.getText().toString();
+        String startDate = buttonStartDate.getText().toString();
+        String endDate = buttonEndDate.getText().toString();
+        String status = spinnerStatus.getSelectedItem().toString();
 
+        if (title.isEmpty() || category.isEmpty() || startDate.isEmpty() || endDate.isEmpty() || status.isEmpty()) {
+            Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Ensure userId is set
+        if (task != null) {
+            String userId = mAuth.getCurrentUser().getUid();
+            task.setUserId(userId);
+            task.setTitle(title);
+            task.setCategory(category);
+            task.setStartDate(startDate);
+            task.setEndDate(endDate);
+            task.setStatus(status);
+
+            db.collection("tasks").document(task.getId())
+                    .set(task)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(EditTaskActivity.this, "Task updated", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(EditTaskActivity.this, "Error updating task", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(this, "Error: Task data is missing", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

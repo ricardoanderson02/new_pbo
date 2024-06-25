@@ -28,7 +28,7 @@
         android:layout_marginStart="8dp" />
 
     <EditText
-        android:id="@+id/editTextTaskTitle"
+        android:id="@+id/editTextTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@id/editTaskTextView" />
 
     <EditText
-        android:id="@+id/editTextTaskCategory"
+        android:id="@+id/editTextCategory"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -53,10 +53,10 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextTaskTitle" />
+        app:layout_constraintTop_toBottomOf="@id/editTextTitle" />
 
     <Button
-        android:id="@+id/buttonTaskStartDate"
+        android:id="@+id/buttonStartDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -66,10 +66,10 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextTaskCategory" />
+        app:layout_constraintTop_toBottomOf="@id/editTextCategory" />
 
     <Button
-        android:id="@+id/buttonTaskEndDate"
+        android:id="@+id/buttonEndDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -79,10 +79,10 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonTaskStartDate" />
+        app:layout_constraintTop_toBottomOf="@id/buttonStartDate" />
 
     <Spinner
-        android:id="@+id/spinnerTaskStatus"
+        android:id="@+id/spinnerStatus"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -90,19 +90,19 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonTaskEndDate" />
+        app:layout_constraintTop_toBottomOf="@id/buttonEndDate" />
 
     <Button
-        android:id="@+id/buttonUpdateTask"
+        android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:backgroundTint="@android:color/holo_blue_light"
-        android:text="Update Task"
+        android:text="Save"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerTaskStatus" />
+        app:layout_constraintTop_toBottomOf="@id/spinnerStatus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

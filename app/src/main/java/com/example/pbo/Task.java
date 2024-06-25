@@ -9,17 +9,19 @@ public class Task implements Serializable {
     private String startDate;
     private String endDate;
     private String status;
+    private String userId; // Tambahkan userId
 
     // Constructor kosong diperlukan untuk Firestore
     public Task() {
     }
 
-    public Task(String title, String category, String startDate, String endDate, String status) {
+    public Task(String title, String category, String startDate, String endDate, String status, String userId) {
         this.title = title;
         this.category = category;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.userId = userId;
     }
 
     // Getter dan Setter untuk semua properti
@@ -70,5 +72,13 @@ public class Task implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

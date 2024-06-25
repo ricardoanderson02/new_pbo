@@ -51,15 +51,11 @@
         <TextView
             android:id="@+id/textViewStatus"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/textViewDueDate"
             android:text="Status: Not Started"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
-
-        <!-- Checklist button moved to the top right -->
-
-        <!-- Edit and Delete buttons centered horizontally -->
+            android:textSize="14sp"
+            android:textColor="@android:color/black" />
 
         <ImageButton
             android:id="@+id/buttonComplete"
@@ -75,7 +71,24 @@
             android:minHeight="48dp"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_check" />
+            android:src="@drawable/ic_uncheck" />
+
+        <ImageButton
+            android:id="@+id/buttonChecked"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Checked"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_check"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,7 +98,7 @@
 
             <Button
                 android:id="@+id/buttonEdit"
-                android:layout_width="98dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="@color/teal_700"

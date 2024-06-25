@@ -82,7 +82,7 @@ public class UploadTaskActivity extends AppCompatActivity {
                     FirebaseUser user = mAuth.getCurrentUser();
                     if (user != null) {
                         String userId = user.getUid();
-                        Task newTask = new Task(title, category, startDate, endDate, status);
+                        Task newTask = new Task(title, category, startDate, endDate, status, userId);
 
                         // Simpan tugas baru ke Firestore
                         Map<String, Object> taskMap = new HashMap<>();

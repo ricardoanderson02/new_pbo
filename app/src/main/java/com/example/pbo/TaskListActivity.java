@@ -29,10 +29,6 @@ public class TaskListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         taskList = new ArrayList<>();
-        // Tambahkan tugas contoh untuk pengujian
-        taskList.add(new Task("Title 1", "Category 1", "2023-06-01", "2023-06-05", "Not Started"));
-        taskList.add(new Task("Title 2", "Category 2", "2023-06-01", "2023-06-05", "In Progress"));
-
         taskAdapter = new TaskAdapter(taskList, this);
         recyclerView.setAdapter(taskAdapter);
 
@@ -62,5 +58,12 @@ public class TaskListActivity extends AppCompatActivity {
         task.setStatus("Completed");
         taskAdapter.notifyDataSetChanged();
         Toast.makeText(this, "Task marked as complete: " + task.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void unmarkTaskComplete(Task task) {
+        // Implementasikan logika untuk menandai tugas sebagai belum selesai
+        task.setStatus("Not Started");
+        taskAdapter.notifyDataSetChanged();
+        Toast.makeText(this, "Task marked as not complete: " + task.getTitle(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -39,6 +39,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.textViewDueDate.setText("Due: " + task.getEndDate());
         holder.textViewStatus.setText("Status: " + task.getStatus());
 
+        // Set visibility of check/uncheck button based on task status
+        if ("Completed".equals(task.getStatus())) {
+            holder.buttonComplete.setVisibility(View.GONE);
+            holder.buttonChecked.setVisibility(View.VISIBLE);
+        } else {
+            holder.buttonComplete.setVisibility(View.VISIBLE);
+            holder.buttonChecked.setVisibility(View.GONE);
+        }
+
         holder.buttonEdit.setOnClickListener(v -> {
             if (context instanceof MainActivity) {
                 ((MainActivity) context).editTask(task);
@@ -56,6 +65,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 ((MainActivity) context).markTaskComplete(task);
             }
         });
+
+        holder.buttonChecked.setOnClickListener(v -> {
+            if (context instanceof TaskListActivity) {
+                ((TaskListActivity) context).unmarkTaskComplete(task);
+            }
+        });
     }
 
     @Override
@@ -66,7 +81,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTitle, textViewCategory, textViewCreationDate, textViewDueDate, textViewStatus;
         public Button buttonEdit, buttonDelete;
-        public ImageButton buttonComplete;
+        public ImageButton buttonComplete, buttonChecked;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
@@ -78,6 +93,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             buttonEdit = itemView.findViewById(R.id.buttonEdit);
             buttonDelete = itemView.findViewById(R.id.buttonDelete);
             buttonComplete = itemView.findViewById(R.id.buttonComplete);
+            buttonChecked = itemView.findViewById(R.id.buttonChecked);
         }
     }
 }
